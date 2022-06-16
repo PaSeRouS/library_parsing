@@ -61,10 +61,16 @@ if __name__ == '__main__':
                 class_='bookimage'
             ).find('img')['src']
 
+            comments = soup.find_all('div', class_='texts')
+
+            print(f'Название книги: {book_data[0]}')
+            for comment in comments:
+                print(comment.find('span').text)
+
             image_url = f'http://tululu.org{image_tag}'
             image_name = split(urlsplit(unquote(image_url)).path)[1]
 
             # download_txt(url, book_data[0])
-            download_image(image_url, image_name)
+            # download_image(image_url, image_name)
         except HTTPError:
             print(f'Книга с id={x+1} отсутствует.')
