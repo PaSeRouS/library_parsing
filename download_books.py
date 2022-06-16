@@ -63,9 +63,17 @@ if __name__ == '__main__':
 
             comments = soup.find_all('div', class_='texts')
 
-            print(f'Название книги: {book_data[0]}')
-            for comment in comments:
-                print(comment.find('span').text)
+            print(f'Заголовок: {book_data[0]}')
+            genres_ref = soup.find('span', class_='d_book').find_all('a')
+
+            genres = []
+            for genre in genres_ref:
+                genres.append(genre.text)
+
+            print(genres)
+
+            # for comment in comments:
+            #     print(comment.find('span').text)
 
             image_url = f'http://tululu.org{image_tag}'
             image_name = split(urlsplit(unquote(image_url)).path)[1]
