@@ -1,3 +1,4 @@
+import argparse
 import os
 from os.path import split, splitext
 
@@ -23,7 +24,7 @@ def download_txt(url, filename, folder='books/'):
         os.makedirs(folder, exist_ok=True)
 
         filename = filename.replace(':', '-')
-        filename = f'{folder}{x+1}. {filename.strip()}.txt'
+        filename = f'{folder}{filename.strip()}.txt'
         with open(filename, 'wb') as file:
             file.write(response.content)
     except HTTPError:
@@ -81,10 +82,27 @@ def parse_book_page(html):
 
 
 if __name__ == '__main__':
-    for x in range(10):
-        url = f'http://tululu.org/txt.php?id={x+1}'
+    parser = argparse.ArgumentParser(
+        description='Парсер книг из большой бесплатной библиотеки'
+    )
+    parser.add_argument(
+        'start_id',
+        help='ID книги, с которой скачивать',
+        type=int
+    )
+    
+    parser.add_argument(
+        'end_id',
+        help='ID книги, на которой скачивание закончить',
+        type=int
+    )
+    
+    args = parser.parse_args()
 
-        book_url = f'https://tululu.org/b{x+1}/'
+    for book_id in range(args.start_id+1, args.end_id):
+        url = f'http://tululu.org/txt.php?id={book_id+1}'
+
+        book_url = f'https://tululu.org/b{book_id+1}/'
         book_html = requests.get(book_url)
         book_html.raise_for_status()
 
@@ -93,10 +111,10 @@ if __name__ == '__main__':
 
             book_params = parse_book_page(book_html)
 
-            # download_txt(url, book_params['title'])
-            # download_image(
-            #     book_params['image_url'],
-            #     book_params['image_name']
-            # )
+            download_txt(url, book_params['title'])
+            download_image(
+                book_params['image_url'],
+                book_params['image_name']
+            )
         except HTTPError:
-            print(f'Книга с id={x+1} отсутствует.')
+            print(f'Книга с id={book_id+1} отсутствует.')
