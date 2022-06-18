@@ -4,6 +4,7 @@ from os.path import split, splitext
 
 import requests
 from bs4 import BeautifulSoup
+from pathlib import Path
 from pathvalidate import sanitize_filename
 from requests import HTTPError
 from urllib.parse import unquote, urljoin, urlsplit
@@ -22,7 +23,7 @@ def download_txt(url, filename, url_params, folder='books/'):
     os.makedirs(folder, exist_ok=True)
 
     filename = filename.replace(':', '-')
-    filename = f'{folder}{filename.strip()}.txt'
+    filename = Path(folder, f"{filename.strip()}.txt")
     with open(filename, 'wb') as file:
         file.write(response.content)
 
