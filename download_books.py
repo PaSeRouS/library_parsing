@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from pathlib import Path
 from pathvalidate import sanitize_filename
 from requests import HTTPError
+from tqdm import tqdm
 from urllib.parse import unquote, urljoin, urlsplit
 
 
@@ -90,7 +91,7 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
 
-    for book_id in range(args.start_id+1, args.end_id):
+    for book_id in tqdm(range(args.start_id+1, args.end_id)):
         url_params = {
             'id': book_id
         }
