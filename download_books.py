@@ -46,11 +46,9 @@ def parse_book_page(book_page):
 
     soup = BeautifulSoup(book_page.text, 'lxml')
 
-    # Данные о названии
     title_tag = soup.find('body').find('table').find('h1')
     book_title = title_tag.text.split('::')[0].strip()
 
-    # Данные об изображении
     image_tag = soup.find(
         'div',
         class_='bookimage'
@@ -59,13 +57,11 @@ def parse_book_page(book_page):
     image_url = f'http://tululu.org{image_tag}'
     image_name = split(urlsplit(unquote(image_url)).path)[1]
 
-    # Данные о комментариях
     comments = soup.find_all('div', class_='texts')
     comments_texts = []
     for comment in comments:
         comments_texts.append(comment.find('span').text)
 
-    # Данные о жанрах
     genres_ref = soup.find('span', class_='d_book').find_all('a')
     genres = []
     for genre in genres_ref:
