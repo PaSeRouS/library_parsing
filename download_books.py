@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 from requests import HTTPError
-from urllib.parse import unquote, urlsplit
+from urllib.parse import unquote, urljoin, urlsplit
 
 
 def check_for_redirect(response):
@@ -54,7 +54,7 @@ def parse_book_page(book_page):
         class_='bookimage'
     ).find('img')['src']
 
-    image_url = f'http://tululu.org{image_tag}'
+    image_url = urljoin(book_page.url, image_tag)
     image_name = split(urlsplit(unquote(image_url)).path)[1]
 
     comments = soup.find_all('div', class_='texts')
