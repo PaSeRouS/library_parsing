@@ -10,9 +10,8 @@ from urllib.parse import unquote, urlsplit
 
 
 def check_for_redirect(response):
-    for record in response.history:
-        if record.status_code == 302:
-            raise HTTPError
+    if response.history:
+        raise HTTPError
 
 
 def download_txt(url, filename, folder='books/'):
@@ -100,7 +99,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     for book_id in range(args.start_id+1, args.end_id):
-        url = f'http://tululu.org/txt.php?id={book_id+1}'
+        url = f'https://tululu.org/txt.php?id={book_id+1}'
 
         book_url = f'https://tululu.org/b{book_id+1}/'
         book_html = requests.get(book_url)
