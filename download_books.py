@@ -71,11 +71,13 @@ def parse_book_page(book_page):
     for genre in genres_ref:
         genres.append(genre.text)
 
-    book_params['title'] = book_data[0].strip()
-    book_params['image_url'] = image_url
-    book_params['image_name'] = image_name
-    book_params['comments'] = comments_texts
-    book_params['genres'] = genres
+    book_params = {
+        'title': book_data[0].strip(),
+        'image_url': image_url,
+        'image_name': image_name,
+        'comments': comments_texts,
+        'genres': genres
+    }
 
     return book_params
 
