@@ -18,16 +18,13 @@ def download_txt(url, filename, url_params, folder='books/'):
     response = requests.get(url, params=url_params)
     response.raise_for_status()
 
-    try: 
-        check_for_redirect(response)
-        os.makedirs(folder, exist_ok=True)
+    check_for_redirect(response)
+    os.makedirs(folder, exist_ok=True)
 
-        filename = filename.replace(':', '-')
-        filename = f'{folder}{filename.strip()}.txt'
-        with open(filename, 'wb') as file:
-            file.write(response.content)
-    except HTTPError:
-        print(f'Книга "{filename}" отсутствует.')
+    filename = filename.replace(':', '-')
+    filename = f'{folder}{filename.strip()}.txt'
+    with open(filename, 'wb') as file:
+        file.write(response.content)
 
 
 def download_image(url, filename, folder='images/'):
@@ -103,6 +100,8 @@ if __name__ == '__main__':
         book_page_response = requests.get(book_url)
         book_page_response.raise_for_status()
 
+        book_params = {}
+
         try:
             check_for_redirect(book_page_response)
 
@@ -114,4 +113,8 @@ if __name__ == '__main__':
                 book_params['image_name']
             )
         except HTTPError:
-            print(f'Книга с id={book_id} отсутствует.')
+            if book_params:
+                title = book_params['title']
+                print(f'Книга "{title}" отсутствует.')
+            else:
+                print(f'Книга с id={book_id} отсутствует.')
