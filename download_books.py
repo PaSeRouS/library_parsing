@@ -22,7 +22,7 @@ def download_txt(url, filename, url_params, folder='books/'):
     check_for_redirect(response)
     os.makedirs(folder, exist_ok=True)
 
-    filename = filename.replace(':', '-')
+    filename = sanitize_filename(filename)
     filename = Path(folder, f"{filename.strip()}.txt")
     with open(filename, 'wb') as file:
         file.write(response.content)
