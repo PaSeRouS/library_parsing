@@ -41,10 +41,10 @@ def download_image(url, filename, folder='images/'):
         file.write(response.content)
 
 
-def parse_book_page(html):
+def parse_book_page(book_page):
     book_params = {}
 
-    soup = BeautifulSoup(html.text, 'lxml')
+    soup = BeautifulSoup(book_page.text, 'lxml')
 
     # Данные о названии
     title_tag = soup.find('body').find('table').find('h1')
@@ -106,13 +106,13 @@ if __name__ == '__main__':
         url = 'https://tululu.org/txt.php'
 
         book_url = f'https://tululu.org/b{book_id}/'
-        book_html = requests.get(book_url)
-        book_html.raise_for_status()
+        book_page_response = requests.get(book_url)
+        book_page_response.raise_for_status()
 
         try:
-            check_for_redirect(book_html)
+            check_for_redirect(book_page_response)
 
-            book_params = parse_book_page(book_html)
+            book_params = parse_book_page(book_page_response)
 
             download_txt(url, book_params['title'], url_params)
             download_image(
