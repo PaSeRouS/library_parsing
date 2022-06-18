@@ -97,7 +97,7 @@ if __name__ == '__main__':
             'id': book_id
         }
 
-        url = 'https://tululu.org/txt.php'
+        download_url = 'https://tululu.org/txt.php'
 
         book_url = f'https://tululu.org/b{book_id}/'
         book_page_response = requests.get(book_url)
@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
             book_params = parse_book_page(book_page_response)
 
-            download_txt(url, book_params['title'], url_params)
+            download_txt(download_url, book_params['title'], url_params)
             download_image(
                 book_params['image_url'],
                 book_params['image_name']
