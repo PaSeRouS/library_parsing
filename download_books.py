@@ -14,8 +14,8 @@ def check_for_redirect(response):
         raise HTTPError
 
 
-def download_txt(url, filename, folder='books/'):
-    response = requests.get(url)
+def download_txt(url, filename, url_params, folder='books/'):
+    response = requests.get(url, params=url_params)
     response.raise_for_status()
 
     try: 
@@ -99,7 +99,11 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     for book_id in range(args.start_id+1, args.end_id):
-        url = f'https://tululu.org/txt.php?id={book_id+1}'
+        url_params = {
+            'id': book_id+1
+        }
+
+        url = 'https://tululu.org/txt.php'
 
         book_url = f'https://tululu.org/b{book_id+1}/'
         book_html = requests.get(book_url)
@@ -110,7 +114,7 @@ if __name__ == '__main__':
 
             book_params = parse_book_page(book_html)
 
-            download_txt(url, book_params['title'])
+            download_txt(url, book_params['title'], url_params)
             download_image(
                 book_params['image_url'],
                 book_params['image_name']
