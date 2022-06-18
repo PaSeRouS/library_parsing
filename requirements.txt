@@ -3,4 +3,5 @@ lxml==4.9.0
 pathlib==1.0.1
 pathvalidate==2.5.0
 requests==2.27.1
+tqdm==4.64.0
 urllib3==1.26.9
