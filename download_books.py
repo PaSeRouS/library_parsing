@@ -48,7 +48,7 @@ def parse_book_page(book_page):
 
     # Данные о названии
     title_tag = soup.find('body').find('table').find('h1')
-    book_data = title_tag.text.split('::')
+    book_title = title_tag.text.split('::')[0].strip()
 
     # Данные об изображении
     image_tag = soup.find(
@@ -72,7 +72,7 @@ def parse_book_page(book_page):
         genres.append(genre.text)
 
     book_params = {
-        'title': book_data[0].strip(),
+        'title': book_title,
         'image_url': image_url,
         'image_name': image_name,
         'comments': comments_texts,
