@@ -100,12 +100,12 @@ if __name__ == '__main__':
 
     for book_id in range(args.start_id+1, args.end_id):
         url_params = {
-            'id': book_id+1
+            'id': book_id
         }
 
         url = 'https://tululu.org/txt.php'
 
-        book_url = f'https://tululu.org/b{book_id+1}/'
+        book_url = f'https://tululu.org/b{book_id}/'
         book_html = requests.get(book_url)
         book_html.raise_for_status()
 
@@ -120,4 +120,4 @@ if __name__ == '__main__':
                 book_params['image_name']
             )
         except HTTPError:
-            print(f'Книга с id={book_id+1} отсутствует.')
+            print(f'Книга с id={book_id} отсутствует.')
