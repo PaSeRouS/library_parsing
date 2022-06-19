@@ -91,14 +91,12 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
 
-    for book_id in tqdm(range(args.start_id+1, args.end_id)):
+    for book_id in tqdm(range(args.start_id, args.end_id)):
         url_params = {
             'id': book_id
         }
 
         download_url = 'https://tululu.org/txt.php'
-
-        time.sleep(5)
 
         try:
             book_url = f'https://tululu.org/b{book_id}/'
