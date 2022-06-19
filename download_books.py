@@ -24,7 +24,7 @@ def download_txt(url, filename, url_params, folder='books/'):
     os.makedirs(folder, exist_ok=True)
 
     filename = sanitize_filename(filename)
-    filename = Path(folder, f"{filename.strip()}.txt")
+    filename = Path(folder, f'{filename.strip()}.txt')
     with open(filename, 'wb') as file:
         file.write(response.content)
 
@@ -35,7 +35,7 @@ def download_image(url, filename, folder='images/'):
 
     os.makedirs(folder, exist_ok=True)
 
-    filename = f'{folder}{filename}'
+    filename = Path(folder, filename)
     with open(filename, 'wb') as file:
         file.write(response.content)
 
