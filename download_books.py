@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from pathlib import Path
 from pathvalidate import sanitize_filename
-from requests import HTTPError
+from requests import ConnectionError, HTTPError
 from tqdm import tqdm
 from urllib.parse import unquote, urljoin, urlsplit
 
@@ -98,13 +98,15 @@ if __name__ == '__main__':
 
         download_url = 'https://tululu.org/txt.php'
 
-        book_url = f'https://tululu.org/b{book_id}/'
-        book_page_response = requests.get(book_url)
-        book_page_response.raise_for_status()
-
-        book_params = {}
+        time.sleep(5)
 
         try:
+            book_url = f'https://tululu.org/b{book_id}/'
+            book_page_response = requests.get(book_url)
+            book_page_response.raise_for_status()
+
+            book_params = {}
+
             check_for_redirect(book_page_response)
 
             book_params = parse_book_page(book_page_response)
@@ -120,3 +122,5 @@ if __name__ == '__main__':
                 print(f'Книга "{title}" отсутствует.')
             else:
                 print(f'Книга с id={book_id} отсутствует.')
+        except ConnectionError:
+            print('Нет подключения к сети.')
