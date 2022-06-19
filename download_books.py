@@ -103,8 +103,6 @@ if __name__ == '__main__':
             book_page_response = requests.get(book_url)
             book_page_response.raise_for_status()
 
-            book_params = {}
-
             check_for_redirect(book_page_response)
 
             book_params = parse_book_page(book_page_response)
