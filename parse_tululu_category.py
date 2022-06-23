@@ -1,3 +1,4 @@
+import argparse
 import json
 
 import requests
@@ -10,9 +11,36 @@ from download_books import check_for_redirect, parse_book_page
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description='Парсер книг из большой бесплатной библиотеки'
+    )
+    parser.add_argument(
+        '--start_page',
+        help='Номер страницы, с которой скачивать',
+        type=int
+    )
+    
+    parser.add_argument(
+        '--end_page',
+        help='Номер страницы, на которой скачивание закончить',
+        type=int
+    )
+    
+    args = parser.parse_args()
+
+    if args.start_page:
+        start_page = args.start_page - 1
+    else:
+        start_page = 1
+
+    if args.end_page:
+        end_page = args.end_page - 1
+    else:
+        end_page = 702
+
     books_descriptions = []
 
-    for page_id in range(4):
+    for page_id in range(start_page, end_page):
         genre_books_url = f'https://tululu.org/l55/{page_id+1}'
         genre_books_response = requests.get(genre_books_url)
         genre_books_response.raise_for_status()
@@ -24,6 +52,7 @@ if __name__ == '__main__':
 
         for book in books:
             book_url = urljoin('https://tululu.org', book.find('a')['href'])
+            print(book_url)
             book_page_response = requests.get(book_url)
             book_page_response.raise_for_status()
 
