@@ -16,7 +16,7 @@ def check_for_redirect(response):
         raise HTTPError
 
 
-def download_txt(url, filename, url_params, folder='books/'):
+def download_txt(url, filename, url_params={}, folder='books/'):
     response = requests.get(url, params=url_params)
     response.raise_for_status()
 
@@ -57,10 +57,10 @@ def parse_book_page(book_page):
     image_name = split(urlsplit(unquote(image_url)).path)[1]
 
     comments = soup.find_all('div', class_='texts')
-    comments_texts = [comment for comment in comments]
+    comments_texts = [comment.find('span').text for comment in comments]
 
     genres_ref = soup.find('span', class_='d_book').find_all('a')
-    genres = [genre for genre in genres_ref]
+    genres = [genre.text for genre in genres_ref]
 
     book_params = {
         'title': book_title,
