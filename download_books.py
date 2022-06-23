@@ -45,21 +45,22 @@ def parse_book_page(book_page):
 
     soup = BeautifulSoup(book_page.text, 'lxml')
 
-    title_tag = soup.find('body').find('table').find('h1')
+    selector = 'body table h1'
+    title_tag = soup.select_one(selector)
     book_title = title_tag.text.split('::')[0].strip()
 
-    image_tag = soup.find(
-        'div',
-        class_='bookimage'
-    ).find('img')['src']
+    selector = 'div.bookimage img'
+    image_tag = soup.select_one(selector)['src']
 
     image_url = urljoin(book_page.url, image_tag)
     image_name = split(urlsplit(unquote(image_url)).path)[1]
 
-    comments = soup.find_all('div', class_='texts')
+    selector = 'div.texts'
+    comments = soup.select(selector)
     comments_texts = [comment.find('span').text for comment in comments]
 
-    genres_ref = soup.find('span', class_='d_book').find_all('a')
+    selector = 'span.d_book a'
+    genres_ref = soup.select(selector)
     genres = [genre.text for genre in genres_ref]
 
     book_params = {

@@ -19,7 +19,8 @@ if __name__ == '__main__':
 
         soup = BeautifulSoup(genre_books_response.text, 'lxml')
 
-        books = soup.find_all('table', class_='d_book')
+        selector = 'table.d_book'
+        books = soup.select(selector)
 
         for book in books:
             book_url = urljoin('https://tululu.org', book.find('a')['href'])
@@ -31,7 +32,8 @@ if __name__ == '__main__':
 
             download_url = ''
 
-            book_refs = soup.find('table', class_='d_book').find_all('a')
+            selector = 'table.d_book a'
+            book_refs = soup.select(selector)
             for ref in book_refs:
                 if ref.text == 'скачать txt':
                     download_url = urljoin(
