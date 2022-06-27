@@ -62,8 +62,11 @@ if __name__ == '__main__':
 
     books_descriptions = []
 
-    for page_id in range(args.start_page-1, args.end_page):
-        genre_books_url = f'https://tululu.org/l55/{page_id+1}'
+    os.makedirs(args.json_path, exist_ok=True)
+    json_filename = Path(args.json_path, 'books.json')
+
+    for page_id in range(args.start_page, args.end_page):
+        genre_books_url = f'https://tululu.org/l55/{page_id}'
         genre_books_response = requests.get(genre_books_url)
         genre_books_response.raise_for_status()
 
@@ -107,15 +110,10 @@ if __name__ == '__main__':
                     download_image(
                         book_params['image_url'],
                         book_params['image_name'],
-                        folder=f'{args.dest_folder}/images'
+                        folder=folder
                     )
 
-    if args.json_path:
-        os.makedirs(args.json_path, exist_ok=True)
-        json_filename = Path(args.json_path, 'books.json')
-    elif not args.dest_folder:
-        json_filename = 'books.json'
-    else:
+    if args.dest_folder and not args.json_path:
         os.makedirs(args.dest_folder, exist_ok=True)
         json_filename = Path(args.dest_folder, 'books.json')
 
