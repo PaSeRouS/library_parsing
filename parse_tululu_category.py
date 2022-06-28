@@ -55,7 +55,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--json_path',
         help='Путь для файла books.json',
-        default=''
+        default='/books'
     )
 
     args = parser.parse_args()
@@ -66,54 +66,64 @@ if __name__ == '__main__':
     json_filename = Path(args.json_path, 'books.json')
 
     for page_id in range(args.start_page, args.end_page):
-        genre_books_url = f'https://tululu.org/l55/{page_id}'
-        genre_books_response = requests.get(genre_books_url)
-        genre_books_response.raise_for_status()
+        try:
+            genre_books_url = f'https://tululu.org/l55/{page_id}'
+            genre_books_response = requests.get(genre_books_url)
+            genre_books_response.raise_for_status()
+            check_for_redirect(genre_books_response)
 
-        soup = BeautifulSoup(genre_books_response.text, 'lxml')
+            soup = BeautifulSoup(genre_books_response.text, 'lxml')
 
-        selector = 'table.d_book'
-        books_page = soup.select(selector)
+            selector = 'table.d_book'
+            books_page = soup.select(selector)
 
-        for book in books_page:
-            book_url = urljoin('https://tululu.org', book.find('a')['href'])
-            book_page_response = requests.get(book_url)
-            book_page_response.raise_for_status()
+            for book in books_page:
+                book_url = urljoin(
+                    'https://tululu.org', 
+                    book.find('a')['href']
+                )
+                book_page_response = requests.get(book_url)
+                book_page_response.raise_for_status()
+                check_for_redirect(book_page_response)
 
-            soup = BeautifulSoup(book_page_response.text, 'lxml')
-            book_params = parse_book_page(book_page_response)
+                soup = BeautifulSoup(book_page_response.text, 'lxml')
+                book_params = parse_book_page(book_page_response)
 
-            download_url = ''
+                download_url = ''
 
-            selector = 'table.d_book a'
-            ref = soup.select(selector)[-3]
-            download_url = urljoin(
-                'https://tululu.org/', 
-                ref['href']
-            )
+                selector = 'table.d_book a'
+                ref = soup.select(selector)[-3]
+                download_url = urljoin(
+                    'https://tululu.org/', 
+                    ref['href']
+                )
 
-            if download_url:
-                books_descriptions.append(book_params)
+                if download_url:
+                    books_descriptions.append(book_params)
 
-                if not args.skip_txt:
-                    folder = Path(args.dest_folder, '/books')
+                    # if not args.skip_txt:
+                    #     folder = Path(args.dest_folder, '/books')
                     
-                    download_txt(
-                        download_url,
-                        book_params['title'],
-                        folder=folder
-                    )
+                    #     download_txt(
+                    #         download_url,
+                    #         book_params['title'],
+                    #         folder=folder
+                    #     )
                 
-                if not args.skip_imgs:
-                    folder = Path(args.dest_folder, '/image')
+                    # if not args.skip_imgs:
+                    #     folder = Path(args.dest_folder, '/image')
 
-                    download_image(
-                        book_params['image_url'],
-                        book_params['image_name'],
-                        folder=folder
-                    )
+                    #     download_image(
+                    #         book_params['image_url'],
+                    #         book_params['image_name'],
+                    #         folder=folder
+                    #     )
+        except HTTPError:
+            print('Некорректная ссылка')
+        except ConnectionError:
+            print('Нет подключения к сети.')
 
-    if args.dest_folder and not args.json_path:
+    if args.dest_folder:
         os.makedirs(args.dest_folder, exist_ok=True)
         json_filename = Path(args.dest_folder, 'books.json')
 
