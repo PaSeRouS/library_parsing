@@ -47,8 +47,10 @@ def parse_book_page(book_page):
 
     selector = 'body table h1'
     title_tag = soup.select_one(selector)
-    book_title = title_tag.text.split('::')[0].strip()
-    book_author = title_tag.text.split('::')[1].strip()
+
+    book_title, book_author = title_tag.text.split('::')
+    book_title = book_title.strip()
+    book_author = book_author.strip()
 
     selector = 'div.bookimage img'
     image_tag = soup.select_one(selector)['src']
