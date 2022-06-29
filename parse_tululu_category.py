@@ -67,17 +67,24 @@ if __name__ == '__main__':
 
     for page_id in range(args.start_page, args.end_page):
         try:
+            books_page = []
+
             genre_books_url = f'https://tululu.org/l55/{page_id}'
             genre_books_response = requests.get(genre_books_url)
             genre_books_response.raise_for_status()
-            check_for_redirect(genre_books_response)
 
+            check_for_redirect(genre_books_response)
             soup = BeautifulSoup(genre_books_response.text, 'lxml')
 
             selector = 'table.d_book'
             books_page = soup.select(selector)
+        except HTTPError:
+            print('Некорректная ссылка')
+        except ConnectionError:
+            print('Нет подключения к сети.')
 
-            for book in books_page:
+        for book in books_page:
+            try:
                 book_url = urljoin(
                     'https://tululu.org', 
                     book.find('a')['href']
@@ -103,13 +110,13 @@ if __name__ == '__main__':
 
                     if not args.skip_txt:
                         folder = Path(args.dest_folder, '/books')
-                    
+
                         download_txt(
                             download_url,
                             book_params['title'],
                             folder=folder
                         )
-                
+
                     if not args.skip_imgs:
                         folder = Path(args.dest_folder, '/image')
 
@@ -118,10 +125,10 @@ if __name__ == '__main__':
                             book_params['image_name'],
                             folder=folder
                         )
-        except HTTPError:
-            print('Некорректная ссылка')
-        except ConnectionError:
-            print('Нет подключения к сети.')
+            except HTTPError:
+                print('Некорректная ссылка')
+            except ConnectionError:
+                print('Нет подключения к сети.')
 
     if args.dest_folder:
         os.makedirs(args.dest_folder, exist_ok=True)
