@@ -101,23 +101,23 @@ if __name__ == '__main__':
                 if download_url:
                     books_descriptions.append(book_params)
 
-                    # if not args.skip_txt:
-                    #     folder = Path(args.dest_folder, '/books')
+                    if not args.skip_txt:
+                        folder = Path(args.dest_folder, '/books')
                     
-                    #     download_txt(
-                    #         download_url,
-                    #         book_params['title'],
-                    #         folder=folder
-                    #     )
+                        download_txt(
+                            download_url,
+                            book_params['title'],
+                            folder=folder
+                        )
                 
-                    # if not args.skip_imgs:
-                    #     folder = Path(args.dest_folder, '/image')
+                    if not args.skip_imgs:
+                        folder = Path(args.dest_folder, '/image')
 
-                    #     download_image(
-                    #         book_params['image_url'],
-                    #         book_params['image_name'],
-                    #         folder=folder
-                    #     )
+                        download_image(
+                            book_params['image_url'],
+                            book_params['image_name'],
+                            folder=folder
+                        )
         except HTTPError:
             print('Некорректная ссылка')
         except ConnectionError:
