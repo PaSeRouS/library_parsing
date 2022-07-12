@@ -1,4 +1,5 @@
 beautifulsoup4==4.11.1
+livereload==2.6.3
 lxml==4.9.0
 pathlib==1.0.1
 pathvalidate==2.5.0

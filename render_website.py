@@ -1,8 +1,10 @@
 import json
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from livereload import Server, shell
 
-if __name__ == '__main__':
+
+def on_reload():
     with open("books.json", "r", encoding='utf8') as json_file:
         books = json.loads(json_file.read())
 
@@ -19,3 +21,9 @@ if __name__ == '__main__':
 
     with open('index.html', 'w', encoding="utf8") as file:
         file.write(rendered_page)
+
+
+if __name__ == '__main__':
+    server = Server()
+    server.watch('template.html', on_reload)
+    server.serve(root='.')
