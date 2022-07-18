@@ -9,6 +9,11 @@ def on_reload():
     with open("books.json", "r", encoding='utf8') as json_file:
         books = json.loads(json_file.read())
 
+    for book in books:
+        title = book['title']
+        book['text_ref'] = f'books/{title}.txt'
+        print(book['text_ref'])
+
     env = Environment(
         loader=FileSystemLoader('.'),
         autoescape=select_autoescape(['html', 'xml'])
