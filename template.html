@@ -12,7 +12,7 @@
   </head>
   <body>
     <nav aria-label="Page navigation example">
-      <ul class="pagination justify-content-center">
+      <ul class="pagination justify-content-center mt-3">
         {% if current_page == 1 %}
           <li class="page-item disabled"><a class="page-link" href="../pages/index{{current_page-1}}.html">Назад</a></li>
         {% else %}
@@ -48,6 +48,9 @@
                     <div class="card-body">
                       <h5 class="card-title">{{ book.title }}</h5>
                       <p class="card-text">{{ book.author }}</p>
+                      {% for genre in book.genres %}
+                        <span class="badge badge-pill badge-light">{{ genre }}</span>
+                      {% endfor %}
                       <p class="card-text">
                         <small class="text-muted">
                           <a href="{{ book.text_ref }}" target="_blank">Читать</a>
