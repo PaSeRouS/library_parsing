@@ -8,9 +8,32 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>Книжки</title>
   </head>
   <body>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        {% if current_page == 1 %}
+          <li class="page-item disabled"><a class="page-link" href="../pages/index{{current_page-1}}.html">Назад</a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="../pages/index{{current_page-1}}.html">Назад</a></li>
+        {% endif %}
+
+        {% for page in range(1, number_of_pages +1 ) %}
+          {% if page == current_page %}
+            <li class="page-item active"><a class="page-link" href="../pages/index{{page}}.html">{{ page }}</a></li>
+          {% else %}
+            <li class="page-item"><a class="page-link" href="../pages/index{{page}}.html">{{ page }}</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if current_page == number_of_pages %}
+          <li class="page-item disabled"><a class="page-link" href="../pages/index{{current_page+1}}.html">Вперёд</a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="../pages/index{{current_page+1}}.html">Вперёд</a></li>
+        {% endif %}
+      </ul>
+    </nav>
     <div class="container">
       <div class="row">
         {% for books in chunked_books %}
