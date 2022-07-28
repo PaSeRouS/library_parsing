@@ -5,15 +5,18 @@ import os
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from livereload import Server, shell
 from more_itertools import chunked
+from pathvalidate import sanitize_filename
+
+BOOKS_PER_PAGE = 20
+COLUMNS_PER_PAGE = 2
 
 
 def on_reload():
     with open("books.json", "r", encoding='utf8') as json_file:
-        books = json.loads(json_file.read())
+        books = json.load(json_file)
 
     for book in books:
-        title = book['title']
-        book['text_ref'] = f'../books/{title}.txt'
+        book['title'] = sanitize_filename(book['title'])
 
     os.makedirs('pages', exist_ok=True)
 
@@ -24,19 +27,19 @@ def on_reload():
 
     template = env.get_template('template.html')
 
-    chunked_books = list(chunked(books, 20))
+    chunked_books = list(chunked(books, BOOKS_PER_PAGE))
     number_of_pages = len(chunked_books)
 
-    for page_number, books_on_page in enumerate(chunked_books):
-        chunked_books_on_page = list(chunked(books_on_page, 2))
+    for page_number, books_on_page in enumerate(chunked_books, start=1):
+        chunked_books_on_page = list(chunked(books_on_page, COLUMNS_PER_PAGE))
 
         rendered_page = template.render(
             chunked_books=chunked_books_on_page,
             number_of_pages=number_of_pages,
-            current_page=page_number+1
+            current_page=page_number
         )
 
-        filename = f'pages/index{page_number+1}.html'
+        filename = f'pages/index{page_number}.html'
 
         with open(filename, 'w', encoding="utf8") as file:
             file.write(rendered_page)
